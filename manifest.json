@@ -1,0 +1,31 @@
+{
+  "manifest_version": 2,
+  "name": "Multi Sözlük",
+  "description": "Tureng, TDK, Ekşi Sözlük gibi sözlüklerde arama yapmanızı kolaylaştırır.",
+  "version": "0.7",
+  "icons": {
+    "128": "images/icon128.png",
+    "256": "images/icon.png"
+  },
+  "browser_action": {
+    "default_icon": "images/icon128.png",
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html",
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "chromeos": "Alt+D",
+        "default": "Alt+D",
+        "linux": "Alt+D",
+        "mac": "Alt+D",
+        "windows": "Alt+D"
+      }
+    }
+  },
+  "permissions": [
+    "tabs",
+    "http://*/*",
+    "https://*/*"
+  ]
+}

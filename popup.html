@@ -1,0 +1,73 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Multi Sözlük</title>
+    <link rel="stylesheet" href="css/foundation.min.css"/>
+    <link rel="stylesheet" href="css/app.css"/>
+    <link rel="stylesheet" href="css/loading.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.min.css">
+</head>
+<body>
+
+<div class="top-bar">
+    <div class="row">
+        <div class="top-bar-left">
+            <ul class="dropdown menu" data-dropdown-menu>
+                <!--<li class="menu-text">Multi Sozluk</li>-->
+                <li><input id="search" type="search" placeholder="Search" tabindex="1" autofocus></li>
+                <!--<li>-->
+                    <!--<button id="tureng" title="Kutuya kelimeyi yazip enter!" type="button" class="button">Tureng</button>-->
+                <!--</li>-->
+                <li>
+                    <button id="tureng" title="Kutuya kelimeyi yazıp -> ENTER" type="button" class="button" tabindex="2">Tureng</button>
+                </li>
+                <li>
+                    <button type="button"  title="TDK sözlüğünde aramak için -> Shift+ENTER" class="button">TDK</button>
+                </li>
+                <li>
+                    <button id="eksi"  title="Ekşi'de aramak için -> Ctrl+ENTER"  type="button" class="button"><img src="images/eksi.png" alt=""></button>
+                </li>
+                <li><a href="options.html" target="_blank" title="Ayarlar ve İletişim"><i class="fi-widget"></i></a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="row medium-12 large-12 columns container">
+
+    <div class="pleaseWait hide text-center">
+        <span>Yükleniyor</span>
+        <span class="l-1"></span>
+        <span class="l-2"></span>
+        <span class="l-3"></span>
+        <span class="l-4"></span>
+        <span class="l-5"></span>
+        <span class="l-6"></span>
+    </div>
+
+    <div class="dict-direction hide">
+        <span class="success label">En->TR</span>
+        <span class="secondary label">En->En</span>
+    </div>
+
+    <div id="content">
+
+    </div>
+
+</div>
+
+<div id="footer">
+        <div class="text-right">
+            <!-- via kısmı -->
+        </div>
+</div>
+
+
+<script src="js/vendor/jquery.min.js"></script>
+<script src="js/foundation.min.js"></script>
+<script src="js/app.js"></script>
+<script src="js/safeResponse.js"></script>
+</body>
+</html>

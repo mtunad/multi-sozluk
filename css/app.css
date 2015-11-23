@@ -1,0 +1,49 @@
+body {
+    width: 650px;
+}
+
+table {
+    width: 100%;
+}
+
+#content {
+    height: 400px;
+    overflow: scroll;
+}
+
+hr {
+    margin: 0.25rem auto
+}
+
+.container {
+    position: relative;
+}
+
+.dict-direction {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+button#tureng {
+    background-color: rgb(155, 10, 25);
+}
+
+button#tdk {
+    background-color: #0078D7;
+}
+
+button#eksi {
+    background-color: #63b655;
+    padding: 2px 10px;
+}
+button#eksi img {
+    max-height: 34px;
+}
+
+
+#footer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
