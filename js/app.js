@@ -114,8 +114,79 @@ search = function () {
     });
   };
 
-  this.__eksi = function (word) {
-    console.log('eksi');
+  this.__eksi = function (word, page) {
+    var xhr = new XMLHttpRequest();
+    if (typeof page !== 'undefined') {
+      xhr.open("GET", page, true);
+    } else {
+      xhr.open("GET", 'https://eksisozluk.com/?q=' + encodeURIComponent(word), true); // pagination icin ?q='dan feragat.
+    }
+    xhr.onreadystatechange = function() {
+      $('.pleaseWait').addClass('hide');
+
+      if (xhr.statusCode == 404) {
+        $('#content').html('<p>Aradığınız <strong>kelimeyi ekşi sözlükte bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir.</p>')
+        return false;
+      }
+
+      if (xhr.readyState == 4) {
+        var responseURL = xhr.responseURL.split('?')[0];
+
+        var data = xhr.responseText;
+
+        if ($(data).find('#entry-list li').length < 1) {
+          $('#content').html('<p>Aradığınız <strong>kelimeyi ekşi sözlüğünde bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir.</p>')
+        }
+        else {
+          for (var i = 0; i < $(data).find('#entry-list li').length; i++) {
+            var entry = safeResponse.cleanDomString($(data).find('#entry-list li')[i].outerHTML);
+            $('#content').append($(entry).find('.content'));
+            var auth_info = '<div class="text-right">';
+            auth_info += '<p class="auth_info">' + safeResponse.cleanDomString($(entry).find('.info .entry-author')[0].outerHTML);
+            auth_info += '  ' + safeResponse.cleanDomString($(entry).find('.info .entry-date')[0].outerHTML)+'</p>';
+            auth_info += '</div>';
+            $('#content').append(auth_info);
+            $('#content').append('<hr>');
+          }
+
+          if ($(data).find('.pager').length > 0) {
+            $('#content').append('<select class="pager">');
+
+            var currPage = $(data).find('.pager')[0].getAttribute('data-currentpage');
+
+            for (i = 1; i <= $(data).find('.pager')[0].getAttribute('data-pagecount'); i++) {
+              if (i == currPage)
+              {
+                $('#content .pager').append('<option value="' + responseURL + '?p=' + i + '" selected>' + i + '</option>');
+              }
+              else
+              {
+                $('#content .pager').append('<option value="' + responseURL + '?p=' + i + '">' + i + '</option>');
+              }
+            }
+
+            $('#content .pager').on('change', function (e) {
+              //var optionSelected = $("option:selected", this);
+              var valueSelected = this.value;
+              search.eksi(word, valueSelected);
+            });
+          }
+
+          $('.auth_info a').on('click', function (e) {
+            e.preventDefault();
+            window.open('https://eksisozluk.com' + $(this).attr('href'))
+          });
+
+          $('.content a[class=b]').on('click', function (e) {
+            e.preventDefault();
+            document.getElementById('search').value = $(this).text();
+            search.eksi($(this).text());
+          });
+        }
+      }
+    };
+    xhr.send();
+
   };
 
   return {
@@ -125,8 +196,8 @@ search = function () {
     wordnik: function (word) {
       return parent.__wordnik(parent.__beforeSearch(word, 'wordnik'))
     },
-    eksi: function (word) {
-      return parent.__eksi(parent.__beforeSearch(word, 'eksi'))
+    eksi: function (word, page) {
+      return parent.__eksi(parent.__beforeSearch(word, 'eksi'), page)
     },
     tdk: function (word) {
       return parent.__tdk(parent.__beforeSearch(word, 'tdk'))

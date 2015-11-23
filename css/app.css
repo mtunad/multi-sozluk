@@ -1,5 +1,6 @@
 body {
     width: 650px;
+    font-family: system, -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
 }
 
 table {
@@ -9,6 +10,8 @@ table {
 #content {
     height: 400px;
     overflow: scroll;
+    word-wrap: break-word;
+
 }
 
 hr {
@@ -50,4 +53,8 @@ button#eksi img {
 
 #footer img {
     max-height: 34px;
+}
+
+.auth_info {
+    font-size: 70%;
 }
