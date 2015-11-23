@@ -47,3 +47,7 @@ button#eksi img {
     bottom: 0;
     right: 0;
 }
+
+#footer img {
+    max-height: 34px;
+}

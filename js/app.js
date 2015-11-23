@@ -16,6 +16,7 @@ search = function () {
     word = typeof word !== 'undefined' ? document.getElementById('search').value = word : document.getElementById('search').value;
     $('#content').html('');
     $('.dict-direction').addClass('hide');
+    $('.pleaseWait').removeClass('hide');
 
     // footer
     var footerHTML = {
@@ -35,9 +36,6 @@ search = function () {
     $.ajax({
       url: 'http://tureng.com/search/' + word,
       type: 'GET',
-      beforeSend: function () {
-        $('.pleaseWait').removeClass('hide');
-      },
       complete: function () {
         $('.pleaseWait').addClass('hide');
       },
@@ -79,7 +77,41 @@ search = function () {
   };
 
   this.__tdk = function (word) {
-    console.log('tdk');
+    $.ajax({
+      url: 'http://www.tdk.gov.tr/index.php?option=com_gts&arama=gts&kelime=' + encodeURIComponent(word),
+      type: 'GET',
+      complete: function () {
+        $('.pleaseWait').addClass('hide');
+      },
+      success: function (data) {
+        if ($(data).find('table[id=hor-minimalist-a]').length < 1 && $(data).find('table[id=hor-minimalist-c]').length < 1)
+        { // suggestion ya da kelimenin anlamı bulunamadıysa
+          $('#content').html('<p>Aradığınız <strong>kelimeyi TDK sözlüğünde bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir.</p>')
+        }
+        else
+        {
+          if ($(data).find('table[id=hor-minimalist-c]').length > 0)
+          {
+            $('#content')
+                .append(safeResponse.cleanDomString($(data).find('table[id=hor-minimalist-c]').html()))
+                .append('<hr>');
+            $("table[id=hor-minimalist-c]").each(function(){ $(this).removeAttr('width')});
+          }
+          for (var i = 0; i < $(data).find('table[id=hor-minimalist-a]').length; i++) {
+            $('#content').append(safeResponse.cleanDomString($(data).find('table[id=hor-minimalist-a]')[i].outerHTML));
+          }
+          $("table[id=hor-minimalist-a]").each(function(){ $(this).removeAttr('width')});
+        }
+
+        $('#content').find('a')
+            .on('click', function (e) {
+              document.getElementById('search').value = $(this).text();
+              search.tdk($(this).text());
+              e.preventDefault();
+            })
+            .prepend('<br />');
+      }
+    });
   };
 
   this.__eksi = function (word) {
