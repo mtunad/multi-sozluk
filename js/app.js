@@ -16,7 +16,8 @@ search = function () {
     word = typeof word !== 'undefined' ? document.getElementById('search').value = word : document.getElementById('search').value;
     $('#content').html('');
     $('.audio span[class=fi-volume]').each(function(){$(this).remove();});
-    $('.dict-direction').addClass('hide');
+    if (dictionary === 'tureng' || dictionary === 'wordnik') console.log('h');
+    else $('.dict-direction').addClass('hide');
     $('.pleaseWait').removeClass('hide');
 
     // footer
@@ -41,6 +42,8 @@ search = function () {
       type: 'GET',
       complete: function () {
         $('.pleaseWait').addClass('hide');
+        $('#enToEn').removeClass('success').addClass('secondary');
+        $('#enToTR').removeClass('secondary').addClass('success');
       },
       success: function (data) {
 
@@ -76,7 +79,59 @@ search = function () {
   };
 
   this.__wordnik = function (word) {
-    console.log('en to en');
+		$.ajax({
+			url: 'http://api.wordnik.com:80/v4/word.json/' + word + '/definitions?limit=10&includeRelated=true&sourceDictionaries=wiktionary&useCanonical=true&includeTags=false&api_key=7e21be24f37babb012408010cec0c5a212312f653348938f5',
+			type: 'GET',
+			complete: function () {
+				$('.pleaseWait').addClass('hide');
+        $('#enToEn').removeClass('secondary').addClass('success');
+        $('#enToTR').removeClass('success').addClass('secondary');
+			},
+			success: function (data) {
+				if (data.length > 0) {
+					var i = Math.floor(Math.random() * (data.length - 1));
+					var sourceDict = data[i].sourceDictionary != undefined ? data[i].sourceDictionary : '';
+					$('#content').prepend('<p title="'+ data[i].sourceDictionary +'">' + data[i].text + '</p>')
+				}
+				else
+					{
+						$('#content').html('<p>Aradığınız <strong>kelimenin anlamını Wordnik arşivinde bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir.</p>');
+					}
+			}
+		});
+
+		$.ajax({
+			url: 'http://api.wordnik.com:80/v4/word.json/' + word + '/relatedWords?useCanonical=true&relationshipTypes=synonym&limitPerRelationshipType=10&api_key=7e21be24f37babb012408010cec0c5a212312f653348938f5',
+			type: 'GET',
+			complete: function () {
+				$('.pleaseWait').addClass('hide');
+			},
+			success: function (data) {
+				if (data.length > 0) {
+					if (data.length > 0) {
+						$('#content').append('<p><span class="info label">' + data[0].relationshipType + '</span> ' + data[0].words.join(', ') +'</p>');
+					}
+				}
+			}
+		});
+    
+    $.ajax({
+      url: 'http://api.wordnik.com:80/v4/word.json/' + word + '/examples?includeDuplicates=false&useCanonical=true&skip=0&limit=5&api_key=7e21be24f37babb012408010cec0c5a212312f653348938f5',
+      type: 'GET',
+      success: function (data) {
+        if (data.examples && data.examples.length > 0) {
+          var max = data.examples.length - 1;
+          var i = Math.floor(Math.random() * (max + 1));
+  
+          var re = new RegExp(data.examples[i].word, "gi");
+  
+          $('#content').append('<p title="'+ data.examples[i].title +'"><span class="info label">example</span> ' + data.examples[i].text.replace(re, "<strong>$&</strong>") + '</p>');
+        }
+      }
+    });
+    
+    parent.__wordnikAudio(word);
+    
   };
 
   this.__wordnikAudio = function (word) {
@@ -225,14 +280,14 @@ search = function () {
       return parent.__tdk(parent.__beforeSearch(word, 'tdk'))
     },
     wordnikAudio: function (word) {
-      return parent.__tdk(parent.__beforeSearch(word));
+      return parent.__wordnikAudio(parent.__beforeSearch(word, 'wordnik'));
     }
 
   }
 }();
 
 document.addEventListener("DOMContentLoaded", function () {
-  $('button#tureng').on('click', function () {
+  $('button#tureng, #enToTR').on('click', function () {
     search.tureng();
   });
 
@@ -244,7 +299,7 @@ document.addEventListener("DOMContentLoaded", function () {
     search.eksi();
   });
 
-  $('button#wordnik').on('click', function () {
+  $('#enToEn').on('click', function () {
     search.wordnik();
   });
 

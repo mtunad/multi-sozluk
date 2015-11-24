@@ -62,6 +62,6 @@ button#eksi img {
     font-size: 140%;
 }
 
-.audio .fi-volume:hover {
+.audio .fi-volume:hover, .dict-direction span:hover {
     cursor: pointer;
 }
