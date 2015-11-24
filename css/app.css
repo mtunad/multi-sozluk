@@ -44,7 +44,6 @@ button#eksi img {
     max-height: 34px;
 }
 
-
 #footer {
     position: fixed;
     bottom: 0;
@@ -57,4 +56,12 @@ button#eksi img {
 
 .auth_info {
     font-size: 70%;
+}
+
+.audio .fi-volume {
+    font-size: 140%;
+}
+
+.audio .fi-volume:hover {
+    cursor: pointer;
 }

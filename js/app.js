@@ -15,6 +15,7 @@ search = function () {
   this.__beforeSearch = function (word, dictionary) {
     word = typeof word !== 'undefined' ? document.getElementById('search').value = word : document.getElementById('search').value;
     $('#content').html('');
+    $('.audio span[class=fi-volume]').each(function(){$(this).remove();});
     $('.dict-direction').addClass('hide');
     $('.pleaseWait').removeClass('hide');
 
@@ -32,6 +33,8 @@ search = function () {
   };
 
   this.__tureng = function (word) {
+    
+    parent.__wordnikAudio(word);
 
     $.ajax({
       url: 'http://tureng.com/search/' + word,
@@ -76,6 +79,25 @@ search = function () {
     console.log('en to en');
   };
 
+  this.__wordnikAudio = function (word) {
+    $.ajax({
+			url: 'http://api.wordnik.com:80/v4/word.json/' + word + '/audio?useCanonical=true&limit=50&api_key=7e21be24f37babb012408010cec0c5a212312f653348938f5',
+			type: 'GET',
+			success: function (data) {
+
+				if (data.length > 0) {
+					for (var i = 0; i < data.length; i++) {
+						$('.audio').append('<span class="fi-volume" data-url="' + data[i].fileUrl + '" aria-hidden="true" title="Kelimenin telaffuzunu dinlemek için tıklayın"></span> ');
+
+						$('.audio span[class=fi-volume]').on('click', function(){ new Audio($(this).attr('data-url')).play();
+																										$(this).css('color', 'blue');
+																									 });
+					} 
+				}
+			}
+		});
+  };
+  
   this.__tdk = function (word) {
     $.ajax({
       url: 'http://www.tdk.gov.tr/index.php?option=com_gts&arama=gts&kelime=' + encodeURIComponent(word),
@@ -201,6 +223,9 @@ search = function () {
     },
     tdk: function (word) {
       return parent.__tdk(parent.__beforeSearch(word, 'tdk'))
+    },
+    wordnikAudio: function (word) {
+      return parent.__tdk(parent.__beforeSearch(word));
     }
 
   }
