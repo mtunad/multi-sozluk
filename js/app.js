@@ -16,15 +16,15 @@ search = function () {
     word = typeof word !== 'undefined' ? document.getElementById('search').value = word : document.getElementById('search').value;
     $('#content').html('');
     $('.audio span[class=fi-volume]').each(function(){$(this).remove();});
-    if (dictionary === 'tureng' || dictionary === 'wordnik') console.log('h');
+    if (dictionary === 'tureng' || dictionary === 'wordnik') {}
     else $('.dict-direction').addClass('hide');
     $('.pleaseWait').removeClass('hide');
 
     // footer
     var footerHTML = {
-      tureng: 'via <a target="_blank" href="http://tureng.com/search/' + word + '"><img src="/images/tureng-logo.png" alt="Tureng.com" width="84" /></a>',
+      tureng: 'via <a target="_blank" href="http://tureng.com/search/' + encodeURIComponent(word) + '"><img src="/images/tureng-logo.png" alt="Tureng.com" width="84" /></a>',
       eksi: 'via <a target="_blank" href="http://www.eksisozluk.com/?q=' + encodeURIComponent(word) + '"><img src="/images/eksi-text.png" alt="eksi" height="32" /></a>',
-      wordnik: "via <a target='_blank' href='https://www.wordnik.com/words/" + word + "'><img src='/images/wordnik-logo.png' alt='wordnik' width='84' /></a>",
+      wordnik: "via <a target='_blank' href='https://www.wordnik.com/words/" + encodeURIComponent(word) + "'><img src='/images/wordnik-logo.png' alt='wordnik' width='84' /></a>",
       tdk: "via <a target='_blank' href='http://www.tdk.gov.tr/index.php?option=com_gts&arama=gts&kelime=" + encodeURIComponent(word) + "'><img src='/images/tdk-logo.png' alt='tdk.gov.tr' height='32' /></a>"
     };
 
@@ -91,7 +91,7 @@ search = function () {
 				if (data.length > 0) {
 					var i = Math.floor(Math.random() * (data.length - 1));
 					var sourceDict = data[i].sourceDictionary != undefined ? data[i].sourceDictionary : '';
-					$('#content').prepend('<p title="'+ data[i].sourceDictionary +'">' + data[i].text + '</p>')
+					$('#content').prepend('<p title="'+ safeResponse.cleanDomString(data[i].sourceDictionary) +'">' + safeResponse.cleanDomString(data[i].text) + '</p>')
 				}
 				else
 					{
@@ -109,7 +109,7 @@ search = function () {
 			success: function (data) {
 				if (data.length > 0) {
 					if (data.length > 0) {
-						$('#content').append('<p><span class="info label">' + data[0].relationshipType + '</span> ' + data[0].words.join(', ') +'</p>');
+						$('#content').append('<p><span class="info label">' + safeResponse.cleanDomString(data[0].relationshipType) + '</span> ' + safeResponse.cleanDomString(data[0].words.join(', ')) +'</p>');
 					}
 				}
 			}
@@ -125,7 +125,7 @@ search = function () {
   
           var re = new RegExp(data.examples[i].word, "gi");
   
-          $('#content').append('<p title="'+ data.examples[i].title +'"><span class="info label">example</span> ' + data.examples[i].text.replace(re, "<strong>$&</strong>") + '</p>');
+          $('#content').append('<p title="'+ safeResponse.cleanDomString(data.examples[i].title) +'"><span class="info label">example</span> ' + safeResponse.cleanDomString(data.examples[i].text.replace(re, "<strong>$&</strong>")) + '</p>');
         }
       }
     });
@@ -142,11 +142,13 @@ search = function () {
 
 				if (data.length > 0) {
 					for (var i = 0; i < data.length; i++) {
-						$('.audio').append('<span class="fi-volume" data-url="' + data[i].fileUrl + '" aria-hidden="true" title="Kelimenin telaffuzunu dinlemek için tıklayın"></span> ');
+						$('.audio').append('<span class="fi-volume" data-url="' + safeResponse.cleanDomString(data[i].fileUrl) + '" aria-hidden="true" title="Kelimenin telaffuzunu dinlemek için tıklayın"></span> ');
 
-						$('.audio span[class=fi-volume]').on('click', function(){ new Audio($(this).attr('data-url')).play();
-																										$(this).css('color', 'blue');
-																									 });
+						$('.audio span[class=fi-volume]')
+              .on('click', function() {
+                new Audio($(this).attr('data-url')).play();
+                $(this).css('color', 'blue');
+              });
 					} 
 				}
 			}
@@ -252,6 +254,11 @@ search = function () {
           $('.auth_info a').on('click', function (e) {
             e.preventDefault();
             window.open('https://eksisozluk.com' + $(this).attr('href'))
+          });
+          
+          $('.content a[class=url]').on('click', function (e) {
+            e.preventDefault();
+            window.open($(this).attr('href'))
           });
 
           $('.content a[class=b]').on('click', function (e) {
