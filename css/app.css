@@ -20,7 +20,7 @@ table {
     /* when opened as popup */
     #content {
         height: 400px;
-        overflow-y: scroll;
+        overflow: auto;
     }
 }
 
