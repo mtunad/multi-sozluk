@@ -1,5 +1,5 @@
 body {
-    width: 650px;
+    min-width: 650px;
     font-family: system, -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
 }
 
@@ -8,11 +8,22 @@ table {
 }
 
 #content {
-    height: 400px;
-    overflow: scroll;
     word-wrap: break-word;
-
 }
+    
+@media screen and (min-width: 700px) {
+/* when opened as tab */
+    
+} 
+
+@media screen and (max-width: 670px) {
+    /* when opened as popup */
+    #content {
+        height: 400px;
+        overflow-y: scroll;
+    }
+}
+
 
 hr {
     margin: 0.25rem auto
