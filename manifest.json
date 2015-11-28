@@ -1,7 +1,8 @@
 {
   "manifest_version": 2,
   "name": "Multi Sözlük",
-  "description": "Tureng, TDK, Ekşi Sözlük gibi sözlüklerde arama yapmanızı kolaylaştırır.",
+  "description": "__MSG_extDescription__",
+  "default_locale": "tr",
   "version": "0.6.4",
   "icons": {
     "128": "images/icon128.png",
