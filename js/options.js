@@ -25,7 +25,6 @@ function restore_options() {
     contextMenu: false
   }, function(items) {
     document.getElementById('contextMenu').checked = items.contextMenu;
-    console.log(items);
   });
 }
 

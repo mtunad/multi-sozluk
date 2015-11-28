@@ -9,7 +9,6 @@ chrome.tabs.executeScript({
   if (selected.length > 0) search.tureng(selected);
 });
 
-
 search = function () {
 
   this.__beforeSearch = function (word, dictionary) {
@@ -292,6 +291,11 @@ search = function () {
 
   }
 }();
+
+
+if (document.location.hash) {
+  search.tureng(document.location.hash.substr(1));
+}
 
 document.addEventListener("DOMContentLoaded", function () {
   $('button#tureng, #enToTR').on('click', function () {
