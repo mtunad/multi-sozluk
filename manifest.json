@@ -3,7 +3,7 @@
   "name": "Multi Sözlük",
   "description": "__MSG_extDescription__",
   "default_locale": "tr",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "icons": {
     "128": "images/icon128.png",
     "256": "images/icon.png"
