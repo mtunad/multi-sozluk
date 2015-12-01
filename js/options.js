@@ -1,5 +1,7 @@
 $(document).foundation();
 
+$("#status").hide();
+
 $('h2 small').html(chrome.runtime.getManifest().version);
 
 // Saves options to chrome.storage
@@ -9,11 +11,10 @@ function save_options() {
     contextMenu: contextMenu
   }, function() {
     // Update status to let user know options were saved.
-    var status = document.getElementById('status');
-    status.textContent = 'Kaydedildi.';
+    $("#status").slideDown();
     setTimeout(function() {
-      status.textContent = '';
-    }, 750);
+      $("#status").slideUp();
+    }, 1000);
   });
 }
 

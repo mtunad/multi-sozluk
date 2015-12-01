@@ -5,6 +5,7 @@
   "default_locale": "tr",
   "version": "0.6.5",
   "icons": {
+    "16": "images/icon16.png",
     "128": "images/icon128.png",
     "256": "images/icon.png"
   },

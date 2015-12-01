@@ -7,7 +7,7 @@ chrome.storage.sync.get({
   
 function createContextMenu() {
 	chrome.contextMenus.create({
-		title: "Multi Sözlük: %s", 
+		title: "Sözlükte %s", 
 		contexts: ["selection"], 
 		onclick: function(info, tab){ 
 			chrome.tabs.create(
