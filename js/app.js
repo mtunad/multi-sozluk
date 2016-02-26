@@ -274,23 +274,23 @@ search = function () {
   };
   
     this.__wikipedia = function (word, language) {
-    $.ajax({
-			url: 'https://' + language + '.wikipedia.org/w/api.php?action=opensearch&search=' + word + '&format=json',
-			type: 'GET',
+        $.ajax({
+            url: 'https://' + language + '.wikipedia.org/w/api.php?action=opensearch&search=' + word + '&format=json',
+            type: 'GET',
             complete: function () {
                 $('.pleaseWait').addClass('hide');
             },
-			success: function (data) {
-              if (data[1].length>0) {
+            success: function (data) {
+                if (data[1].length>0) {
                 $('#content').html("<ol></ol>");
                 for (cnt = 0; cnt < data[1].length; cnt++) {
-                    $("#content ol").append("<li><strong>"+data[1][cnt] + "</strong>: " + data[2][cnt] + ' <a title="yeni sekmede aç" target="_blank" href="' +data[3][cnt] + '"><i class="fi-eject"></i></a>' + "</li>");
+                    $("#content ol").append("<li><strong>"+safeResponse.cleanDomString(data[1][cnt]) + "</strong>: " + safeResponse.cleanDomString(data[2][cnt]) + ' <a title="yeni sekmede aç" target="_blank" href="' + safeResponse.cleanDomString(data[3][cnt]) + '"><i class="fi-eject"></i></a>' + "</li>");
                 }
-              } else {
+                } else {
                 $('#content').html('<p>Aradığınız <strong>kelimenin anlamını Wikipedia\'da bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir ya da <a target="_blank" href="https://www.google.com/search?q=' + word + '">Google <i class="fi-eject"></i></a> </p>');
-              }
-			}
-		});
+                }
+            }
+        });
   };
 
   return {
