@@ -6,7 +6,7 @@ Multi Sözlük, zamanla gelişimine devam edecek olan bir yabancı diller ile T�
 
 Kelimelerin sesli telaffuzları, eğer [Wordnik](https://www.wordnik.com/) arşivinde bulunuyorsa, çeviri kısmının üzerinde oluşacak olan ses ikonlarından dinlenebilir.
 
-İngilizce'den İngilizce'ye çeviri. ([Wordnik](https://www.wordnik.com/))
+İngilizceden İngilizceye çeviri. ([Wordnik](https://www.wordnik.com/))
 
 Zamanla varsayılan çeviri tipi gibi özelleştirilebilme olanaklarını da ekleyeceğim.
 
