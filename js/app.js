@@ -24,7 +24,9 @@ search = function () {
       tureng: 'via <a target="_blank" href="http://tureng.com/search/' + encodeURIComponent(word) + '"><img src="/images/tureng-logo.png" alt="Tureng.com" width="84" /></a>',
       eksi: 'via <a target="_blank" href="http://www.eksisozluk.com/?q=' + encodeURIComponent(word) + '"><img src="/images/eksi-text.png" alt="eksi" height="32" /></a>',
       wordnik: "via <a target='_blank' href='https://www.wordnik.com/words/" + encodeURIComponent(word) + "'><img src='/images/wordnik-logo.png' alt='wordnik' width='84' /></a>",
-      tdk: "via <a target='_blank' href='http://www.tdk.gov.tr/index.php?option=com_gts&arama=gts&kelime=" + encodeURIComponent(word) + "'><img src='/images/tdk-logo.png' alt='tdk.gov.tr' height='32' /></a>"
+      tdk: "via <a target='_blank' href='http://www.tdk.gov.tr/index.php?option=com_gts&arama=gts&kelime=" + encodeURIComponent(word) + "'><img src='/images/tdk-logo.png' alt='tdk.gov.tr' height='32' /></a>",
+      vikipedi: "via <a target='_blank' href='http://tr.wikipedia.org/wiki/" + encodeURIComponent(word) + "'><img src='/images/vikipedi.png' alt='vikipedi' height='64' /></a>",
+      wikipedia: "via <a target='_blank' href='http://en.wikipedia.org/wiki/" + encodeURIComponent(word) + "'><img src='/images/wikipedia.png' alt='wikipedia' height='64' /></a>"
     };
 
     $('#footer').find('div').html(footerHTML[dictionary]);
@@ -94,7 +96,7 @@ search = function () {
 				}
 				else
 					{
-						$('#content').html('<p>Aradığınız <strong>kelimenin anlamını Wordnik arşivinde bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir.</p>');
+						$('#content').html('<p>Aradığınız <strong>kelimenin anlamını Wordnik arşivinde bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir ya da <a target="_blank" href="https://www.google.com/search?q=' + word + '">Google <i class="fi-eject"></i></a> </p>');
 					}
 			}
 		});
@@ -164,7 +166,7 @@ search = function () {
       success: function (data) {
         if ($(data).find('table[id=hor-minimalist-a]').length < 1 && $(data).find('table[id=hor-minimalist-c]').length < 1)
         { // suggestion ya da kelimenin anlamı bulunamadıysa
-          $('#content').html('<p>Aradığınız <strong>kelimeyi TDK sözlüğünde bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir.</p>')
+          $('#content').html('<p>Aradığınız <strong>kelimeyi TDK sözlüğünde bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir ya da <a target="_blank" href="https://www.google.com/search?q=' + word + '">Google <i class="fi-eject"></i></a></p>');
         }
         else
         {
@@ -203,7 +205,7 @@ search = function () {
       $('.pleaseWait').addClass('hide');
 
       if (xhr.statusCode == 404) {
-        $('#content').html('<p>Aradığınız <strong>kelimeyi ekşi sözlükte bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir.</p>')
+        $('#content').html('<p>Aradığınız <strong>kelimeyi Ekşi Sözlük\'te bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir ya da <a target="_blank" href="https://www.google.com/search?q=' + word + '">Google <i class="fi-eject"></i></a> </p>');
         return false;
       }
 
@@ -213,7 +215,7 @@ search = function () {
         var data = xhr.responseText;
 
         if ($(data).find('#entry-list li').length < 1) {
-          $('#content').html('<p>Aradığınız <strong>kelimeyi ekşi sözlüğünde bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir.</p>')
+          $('#content').html('<p>Aradığınız <strong>kelimeyi ekşi sözlüğünde bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir ya da <a target="_blank" href="https://www.google.com/search?q=' + word + '">Google <i class="fi-eject"></i></a> </p>');
         }
         else {
           for (var i = 0; i < $(data).find('#entry-list li').length; i++) {
@@ -269,7 +271,26 @@ search = function () {
       }
     };
     xhr.send();
-
+  };
+  
+    this.__wikipedia = function (word, language) {
+    $.ajax({
+			url: 'https://' + language + '.wikipedia.org/w/api.php?action=opensearch&search=' + word + '&format=json',
+			type: 'GET',
+            complete: function () {
+                $('.pleaseWait').addClass('hide');
+            },
+			success: function (data) {
+              if (data[1].length>0) {
+                $('#content').html("<ol></ol>");
+                for (cnt = 0; cnt < data[1].length; cnt++) {
+                    $("#content ol").append("<li><strong>"+data[1][cnt] + "</strong>: " + data[2][cnt] + ' <a title="yeni sekmede aç" target="_blank" href="' +data[3][cnt] + '"><i class="fi-eject"></i></a>' + "</li>");
+                }
+              } else {
+                $('#content').html('<p>Aradığınız <strong>kelimenin anlamını Wikipedia\'da bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir ya da <a target="_blank" href="https://www.google.com/search?q=' + word + '">Google <i class="fi-eject"></i></a> </p>');
+              }
+			}
+		});
   };
 
   return {
@@ -287,6 +308,12 @@ search = function () {
     },
     wordnikAudio: function (word) {
       return parent.__wordnikAudio(parent.__beforeSearch(word, 'wordnik'));
+    },
+    wikipedia: function (word) {
+      return parent.__wikipedia(parent.__beforeSearch(word, 'wikipedia'), "en");
+    },
+    vikipedi: function (word) {
+      return parent.__wikipedia(parent.__beforeSearch(word, 'vikipedi'), "tr");
     }
 
   }
@@ -308,6 +335,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   $('button#eksi').on('click', function () {
     search.eksi();
+  });
+  
+  $('#wikipedia').on('click', function () {
+    search.wikipedia();
+  });
+
+  $('#vikipedi').on('click', function () {
+    search.vikipedi();
   });
 
   $('#enToEn').on('click', function () {
