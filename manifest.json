@@ -1,6 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Multi Sözlük",
+  "homepage_url": "https://chrome.google.com/webstore/detail/dgjbiomnpnpdickhihabccnbhpipddch",
   "description": "__MSG_extDescription__",
   "default_locale": "tr",
   "version": "0.6.6",
