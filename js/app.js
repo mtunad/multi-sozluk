@@ -183,7 +183,7 @@ search = function () {
           $("table[id=hor-minimalist-a]").each(function(){ $(this).removeAttr('width')});
         }
 
-        $('#content').find('a')
+        $('#content').find('a[target!="_blank"]')
             .on('click', function (e) {
               document.getElementById('search').value = $(this).text();
               search.tdk($(this).text());
