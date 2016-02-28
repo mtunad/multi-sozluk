@@ -217,7 +217,7 @@ search = function () {
         if ($(data).find('#entry-list li').length < 1) {
           $('#content').html('<p>Aradığınız <strong>kelimeyi Ekşi Sözlük\'te bulamadık!</strong> :( <br> Aşağıdaki de aradığınız değilse, kelimedeki ekleri silmek belki yardımcı olabilir ya da <a target="_blank" href="https://www.google.com/search?q=' + word + '">Google <i class="fi-eject"></i></a> </p>');
           if ($(data).find('a.suggested-title')) {
-              $('#content').append($(data).find('a.suggested-title').parent().html());
+              $('#content').append(safeResponse.cleanDomString($(data).find('a.suggested-title').parent().html()));
           }
         }
         else {
