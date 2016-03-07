@@ -53,7 +53,7 @@ search = function () {
         // did you mean varsa: http://tureng.com/search/asfalya / merrymaker
         if ($(data).find('.suggestion-list').length > 0) {
           $('#content')
-              .append('<h3>Did you mean?</h3>')
+              .append('<h3>Did you mean? ya da <a target="_blank" href="https://www.google.com/search?q=' + word + '">Google <i class="fi-eject"></i></a></h3>')
               .append("<ul class='suggestion-list'>" + safeResponse.cleanDomString($(data).find('.suggestion-list').html()) + '</ul>');
         }
         else {
