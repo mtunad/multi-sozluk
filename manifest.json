@@ -4,7 +4,7 @@
   "homepage_url": "https://chrome.google.com/webstore/detail/dgjbiomnpnpdickhihabccnbhpipddch",
   "description": "__MSG_extDescription__",
   "default_locale": "tr",
-  "version": "0.6.8",
+  "version": "0.6.9",
   "icons": {
     "16": "images/icon16.png",
     "128": "images/icon128.png",

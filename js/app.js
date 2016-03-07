@@ -70,9 +70,9 @@ search = function () {
           });
         }
 
-        $('#content').find('ul a').on('click', function (e) {
-          search.tureng($(this).text());
-          e.preventDefault();
+        $('#content').find('table a, .suggestion-list a').on('click', function (e) {
+            e.preventDefault();
+            search.tureng($(this).text());
         });
       }
     });
