@@ -70,7 +70,7 @@ search = function () {
           });
         }
 
-        $('#content').find('a').on('click', function (e) {
+        $('#content').find('ul a').on('click', function (e) {
           search.tureng($(this).text());
           e.preventDefault();
         });
