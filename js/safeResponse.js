@@ -19,11 +19,11 @@ safeResponse = function(){
                 target.parentNode.removeChild(currentAttr);
             }
         }
-    };
+    }
     
     this.__cleanDomString = function(data) {
-        var tmpDom = document.createElement("div");
-        tmpDom.innerHTML = data;
+        var parser = new DOMParser;
+        var tmpDom = parser.parseFromString(data, "text/html").body;
 
         var list, current, currentHref;
 
@@ -37,12 +37,11 @@ safeResponse = function(){
         list = tmpDom.getElementsByTagName("*");
 
         for (i = list.length - 1; i >= 0; i--) {
-            //console.log(parent);
             parent.__removeInvalidAttributes(list[i]);
         }
 
         return tmpDom.innerHTML;
-    };
+    }
     
     return{
         cleanDomString: function(html){
