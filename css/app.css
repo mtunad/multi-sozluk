@@ -7,12 +7,20 @@ table {
     width: 100%;
 }
 
+ul li .but {
+   margin: 0 0.5rem 1rem 0;
+}
+
 li {
   margin-bottom: 1em;
 }
 
 #content {
     word-wrap: break-word;
+}
+
+.button {
+    margin: 0 0.1rem 1rem 0;
 }
     
 @media screen and (min-width: 700px) {
@@ -57,6 +65,10 @@ button#eksi {
 }
 button#eksi img {
     max-height: 34px;
+}
+
+button#urbandict {
+    background-color: #1d2439;
 }
 
 #footer {

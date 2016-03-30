@@ -26,7 +26,8 @@ search = function () {
       wordnik: "via <a target='_blank' href='https://www.wordnik.com/words/" + encodeURIComponent(word) + "'><img src='/images/wordnik-logo.png' alt='wordnik' width='84' /></a>",
       tdk: "via <a target='_blank' href='http://www.tdk.gov.tr/index.php?option=com_gts&arama=gts&kelime=" + encodeURIComponent(word) + "'><img src='/images/tdk-logo.png' alt='tdk.gov.tr' height='32' /></a>",
       vikipedi: "via <a target='_blank' href='http://tr.wikipedia.org/wiki/" + encodeURIComponent(word) + "'><img src='/images/vikipedi.png' alt='vikipedi' height='64' /></a>",
-      wikipedia: "via <a target='_blank' href='http://en.wikipedia.org/wiki/" + encodeURIComponent(word) + "'><img src='/images/wikipedia.png' alt='wikipedia' height='64' /></a>"
+      wikipedia: "via <a target='_blank' href='http://en.wikipedia.org/wiki/" + encodeURIComponent(word) + "'><img src='/images/wikipedia.png' alt='wikipedia' height='64' /></a>",
+      urban: "via <a target='_blank' href='http://www.urbandictionary.com/define.php?term=" + encodeURIComponent(word) + "'><img src='/images/urbandictionary.png' alt='urban dictionary' height='64' /></a>"
     };
 
     $('#footer').find('div').html(footerHTML[dictionary]);
@@ -76,7 +77,37 @@ search = function () {
         });
       }
     });
+  };
+  
+  this.__urban = function (word) {
+    $.ajax({
+      url: 'http://www.urbandictionary.com/define.php?term=' + word,
+      type: 'GET',
+      complete: function () {
+        $('.pleaseWait').addClass('hide');
+      },
+      success: function (data) {
+        if ($(data).find('.no-results').length > 0) {
+            $('#content').html('<p>Aradığınız <strong>kelimenin anlamını Urban Dictionary\'de arşivinde bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir ya da <a target="_blank" href="https://www.google.com/search?q=' + word + '">Google <i class="fi-eject"></i></a> </p>');
+        }
+        else {
+            var meanings = $(data).find(".meaning");
+            var examples = $(data).find(".example");
+            
+            for (var i = 0; i < meanings.length; i++) {
+                $('#content')
+                    .append("<strong>" + safeResponse.cleanDomString(meanings[i].outerHTML) + "</strong>")
+                    .append("<em>" + safeResponse.cleanDomString(examples[i].outerHTML) + "</em>")
+                    .append("<hr>");
+            }
+        }
 
+        $('#content').find('.meaning a').on('click', function (e) {
+            e.preventDefault();
+            search.urban($(this).text());
+        });
+      }
+    });
   };
 
   this.__wordnik = function (word) {
@@ -316,6 +347,9 @@ search = function () {
     },
     vikipedi: function (word) {
       return parent.__wikipedia(parent.__beforeSearch(word, 'vikipedi'), "tr");
+    },
+    urban: function (word) {
+      return parent.__urban(parent.__beforeSearch(word, 'urban'))
     }
 
   }
@@ -347,6 +381,10 @@ document.addEventListener("DOMContentLoaded", function () {
     search.vikipedi();
   });
 
+  $('#urbandict').on('click', function () {
+    search.urban();
+  });
+  
   $('#enToEn').on('click', function () {
     search.wordnik();
   });
