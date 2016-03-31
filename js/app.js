@@ -1,8 +1,12 @@
 $(document).foundation();
 
+
+
+
+
 //noinspection JSUnresolvedVariable,JSUnresolvedFunction
 chrome.tabs.executeScript({
-  code: 'var selection = window.getSelection();selection.modify("move", "backward", "word");selection.modify("extend", "forward", "word");window.getSelection().toString();'
+  code: 'var selection = window.getSelection();if (selection.toString().length > 0){window.getSelection().toString();}else {selection.modify("move", "backward", "word");selection.modify("extend", "forward", "word");window.getSelection().toString();}'
 }, function (selection) {
   var selected = selection[0].trim();
   document.getElementById('search').value = selected;
