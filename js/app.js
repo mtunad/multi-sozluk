@@ -2,7 +2,7 @@ $(document).foundation();
 
 //noinspection JSUnresolvedVariable,JSUnresolvedFunction
 chrome.tabs.executeScript({
-  code: 'window.getSelection().toString();'
+  code: 'var selection = window.getSelection();selection.modify("move", "backward", "word");selection.modify("extend", "forward", "word");window.getSelection().toString();'
 }, function (selection) {
   var selected = selection[0].trim();
   document.getElementById('search').value = selected;

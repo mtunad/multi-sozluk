@@ -12,17 +12,30 @@ Zamanla varsayılan çeviri tipi gibi özelleştirilebilme olanaklarını da ekl
 
 [Ekşi Sözlük](https://eksisozluk.com/) ile de arama yapabilirsiniz. Eğer tarayıcınızdan Ekşi Sözlük'e giriş yaptıysanız, trollere eklediğiniz yazarların entrylerini Multi Sözlük popup'ında göremeyeceksiniz.
 
+[Urban Dictionary](http://www.urbandictionary.com/) de eklendi.
+
+
+
 ## Kısayol
 
-Varsayılan olarak eklentiyi açmak için kısayol `Alt+D` olarak tanımlandı. Değiştirmek istediğinizde
+1. Varsayılan olarak eklentiyi açmak için kısayol `Alt+D` olarak tanımlandı. Değiştirmek istediğinizde
 `chrome://extensions` sayfasının sonundaki __Klavye Kısayolları__'ndan değiştirebilirsiniz.
 
-Arama kutusunda iken `Enter` ile **Tureng**'de, `Shift+Enter` ile **TDK**'da, `Ctrl+Enter` ile **Ekşi Sözlük**'te arama yapabilirsiniz.
+2. Arama kutusunda iken `Enter` ile **Tureng**'de, `Shift+Enter` ile **TDK**'da, `Ctrl+Enter` ile **Ekşi Sözlük**'te arama yapabilirsiniz.
+
+3. Bir kelimeyi başından sonuna kadar seçmenize gerek yok. Kelimenin herhangi bir noktasına bir tık yapmanız yeterli. İmleç görünmese bile, eklenti butonuna bastığınızda tıkladığınız konumdaki kelimeyi eklenti yakalayıp, arama işlevini yapacak. Bir *gif* ile nasıl olduğunu [şuradan](http://i.giphy.com/3o7WTxYHrdfwmjH2P6.gif) görebilirsiniz. İleride daha da detaylandıracağım.
 
 ### İzinler:
 
 - **Sekme ve tüm sayfalara erişim izni** istemesi, eklentinin sayfadaki seçili
 kelimeyi yakalayabilmesi için isteniyor.
+
+### İleride
+- Kullanıcıların istediği sözlükleri ekleyip/kaldırabilmesi.
+- Varsayılan olarak hangi sözlükte aranacağını belirleme. Ya da varsayılan olarak bir arama yapılmayabilmeli.
+- Sözlükler için klavye kısayolları özelleştirilebilmeli.
+- Bir içerik ekşi sözlük'te bulunamazsa sonraki en büyük internet sözlüğündeki arama sonuçları varsa getir.
+- Popup yerine seçimin hemen yanında tooltip olarak sözlüklerin ve sonuçların gösterimi.
 
 ---
 
