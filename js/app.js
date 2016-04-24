@@ -1,9 +1,5 @@
 $(document).foundation();
 
-
-
-
-
 //noinspection JSUnresolvedVariable,JSUnresolvedFunction
 chrome.tabs.executeScript({
   code: 'var selection = window.getSelection();if (selection.toString().length > 0){window.getSelection().toString();}else {selection.modify("move", "backward", "word");selection.modify("extend", "forward", "word");window.getSelection().toString();}'
@@ -361,7 +357,32 @@ search = function () {
 
 
 if (document.location.hash) {
-  search.tureng(document.location.hash.substr(1));
+  switch (document.location.hash.substr(1).split("//")[1]) {
+    case "eksi":
+      search.eksi(document.location.hash.substr(1).split("//")[0]);
+      break;
+      
+    case "tdk":
+      search.tdk(document.location.hash.substr(1).split("//")[0]);
+      break;
+      
+    case "wiki":
+      search.wikipedia(document.location.hash.substr(1).split("//")[0]);
+      break;
+      
+    case "viki":
+      search.vikipedi(document.location.hash.substr(1).split("//")[0]);
+      break;
+      
+    case "urban":
+      search.urban(document.location.hash.substr(1).split("//")[0]);
+      break;
+
+    default:
+      search.tureng(document.location.hash.substr(1).split("//")[0]);
+      break;
+  }
+  
 }
 
 document.addEventListener("DOMContentLoaded", function () {

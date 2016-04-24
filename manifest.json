@@ -4,7 +4,7 @@
   "homepage_url": "https://chrome.google.com/webstore/detail/dgjbiomnpnpdickhihabccnbhpipddch",
   "description": "__MSG_extDescription__",
   "default_locale": "tr",
-  "version": "0.6.94",
+  "version": "0.6.95",
   "icons": {
     "16": "images/icon16.png",
     "128": "images/icon128.png",
@@ -17,16 +17,29 @@
   },
   "options_page": "options.html",
   "commands": {
-    "_execute_browser_action": {
-      "suggested_key": {
-        "chromeos": "Alt+D",
-        "default": "Alt+D",
-        "linux": "Alt+D",
-        "mac": "Alt+D",
-        "windows": "Alt+D"
-      }
-    }
+  "eksi": {
+    "description": "Ekşi Sözlük'te Ara"
   },
+  "tdk": {
+    "description": "TDK'da Ara"
+  },
+  "wiki": {
+    "description": "Wikipedia'da Ara"
+  },
+  "viki": {
+    "description": "Vikipedi'de Ara"
+  },
+  "urban": {
+    "description": "Urban Dictionary'de Ara"
+  },
+  "_execute_browser_action": {
+    "suggested_key": {
+      "default": "Alt+D"
+    }
+  }
+},
+  
+
   "permissions": [
     "tabs",
     "contextMenus",
