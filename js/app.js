@@ -18,6 +18,8 @@ search = function () {
     if (dictionary === 'tureng' || dictionary === 'wordnik') {}
     else $('.dict-direction').addClass('hide');
     $('.pleaseWait').removeClass('hide');
+    $("#difficultyIndex").remove();
+   
 
     // footer
     var footerHTML = {
@@ -74,6 +76,28 @@ search = function () {
         $('#content').find('table a, .suggestion-list a').on('click', function (e) {
             e.preventDefault();
             search.tureng($(this).text());
+        });
+      }
+    });
+    
+    chrome.storage.sync.get({
+      difficultyIndex: false
+    }, function(items) {
+      if (items.difficultyIndex) {
+        $.ajax({
+          url: 'http://www.dictionary.com/browse/' + word,
+          type: 'GET',
+          success: function (data) {
+            var difficulty = $(data).find('#difficulty-box');
+                            
+            if (difficulty.length > 0) {
+              $(".dict-direction").prepend('<span class="primary label" id="difficultyIndex" title="dictionary.com\'daki zorluk indeksi: ' + safeResponse.cleanDomString(difficulty.data("difficulty")) + ' ">' + safeResponse.cleanDomString(difficulty.find(".subtext")[0].innerText) + '</a></span>');
+            }
+            
+            $("#difficultyIndex").click(function(){
+              window.open("http://dictionary.com/browse/"+word,'_blank');
+            });
+          }
         });
       }
     });

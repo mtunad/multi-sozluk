@@ -1,6 +1,6 @@
 Multi Sözlük, zamanla gelişimine devam edecek olan bir yabancı diller ile Türkçe arasında çeviri kolaylığı sağlamayı hedefleyen [Chrome](https://chrome.google.com/webstore/detail/multi-s%C3%B6zl%C3%BCk/dgjbiomnpnpdickhihabccnbhpipddch) & [Opera](https://addons.opera.com/en/extensions/details/multi-sozluk/) eklentisidir.
 
-![MS](https://i.imgur.com/DDAgmbu.png)
+![MS](https://cdn.pbrd.co/images/uUpJwtG.png)
 
 [Tureng](http://tureng.com): *Türkçe-İngilizce* ve [TDK](http://tdk.gov.tr/) ile *Türkçe-Türkçe* çeviri yapabilen sözlük, yakın bir zamanda İngilizce-İngilizce ve ilerleyen zamanlarda Almanca, İspanyolca gibi dilleri de ekleyecek.
 
@@ -14,7 +14,7 @@ Zamanla varsayılan çeviri tipi gibi özelleştirilebilme olanaklarını da ekl
 
 [Urban Dictionary](http://www.urbandictionary.com/) de eklendi.
 
-
+Kelimelerin [dictionary.com](http://www.dictionary.com/)'daki [zorluk indeksini](https://cdn.pbrd.co/images/uPigUFE.png) görmek isterseniz, seçeneklerden ilgili özelliği aktif edebilirsiniz.
 
 ## Kısayol
 
@@ -40,4 +40,4 @@ kelimeyi yakalayabilmesi için isteniyor.
 ---
 
 ### Katkılar
-[Tureng](http://tureng.com), [TDK](http://tdk.gov.tr/), [Ekşi Sözlük](https://eksisozluk.com/), [Wordnik](https://www.wordnik.com/)
+[Tureng](http://tureng.com), [TDK](http://tdk.gov.tr/), [Ekşi Sözlük](https://eksisozluk.com/), [Wordnik](https://www.wordnik.com/), [Dictionary.com](http://www.dictionary.com/), [UrbanDictionary](http://www.urbandictionary.com/)
