@@ -1,25 +1,38 @@
 $(document).foundation();
 
-//noinspection JSUnresolvedVariable,JSUnresolvedFunction
-chrome.tabs.executeScript({
-  code: 'var selection = window.getSelection();if (selection.toString().length > 0){window.getSelection().toString();}else {selection.modify("move", "backward", "word");selection.modify("extend", "forward", "word");window.getSelection().toString();}'
-}, function (selection) {
-  var selected = selection[0].trim();
-  document.getElementById('search').value = selected;
-  if (selected.length > 0) search.tureng(selected);
+
+chrome.storage.sync.get({
+  autoSelectWord: true
+}, function (items) {
+  if (items.autoSelectWord == true) {
+    chrome.tabs.executeScript({
+      code: 'var selection = window.getSelection();if (selection.toString().length > 0){window.getSelection().toString();}else {selection.modify("move", "backward", "word");selection.modify("extend", "forward", "word");window.getSelection().toString();}'
+    }, function (selection) {
+      var selected = selection[0].trim();
+      document.getElementById('search').value = selected;
+      if (selected.length > 0) search.tureng(selected);
+    });
+  }
+
 });
+
+//noinspection JSUnresolvedVariable,JSUnresolvedFunction
+
 
 search = function () {
 
   this.__beforeSearch = function (word, dictionary) {
     word = typeof word !== 'undefined' ? document.getElementById('search').value = word : document.getElementById('search').value;
     $('#content').html('');
-    $('.audio span[class=fi-volume]').each(function(){$(this).remove();});
-    if (dictionary === 'tureng' || dictionary === 'wordnik') {}
+    $('.audio span[class=fi-volume]').each(function () {
+      $(this).remove();
+    });
+    if (dictionary === 'tureng' || dictionary === 'wordnik') {
+    }
     else $('.dict-direction').addClass('hide');
     $('.pleaseWait').removeClass('hide');
     $("#difficultyIndex").remove();
-   
+
 
     // footer
     var footerHTML = {
@@ -38,7 +51,7 @@ search = function () {
   };
 
   this.__tureng = function (word) {
-    
+
     parent.__wordnikAudio(word);
 
     $.ajax({
@@ -74,35 +87,35 @@ search = function () {
         }
 
         $('#content').find('table a, .suggestion-list a').on('click', function (e) {
-            e.preventDefault();
-            search.tureng($(this).text());
+          e.preventDefault();
+          search.tureng($(this).text());
         });
       }
     });
-    
+
     chrome.storage.sync.get({
       difficultyIndex: false
-    }, function(items) {
+    }, function (items) {
       if (items.difficultyIndex) {
         $.ajax({
           url: 'http://www.dictionary.com/browse/' + word,
           type: 'GET',
           success: function (data) {
             var difficulty = $(data).find('#difficulty-box');
-                            
+
             if (difficulty.length > 0) {
               $(".dict-direction").prepend('<span class="primary label" id="difficultyIndex" title="dictionary.com\'daki zorluk indeksi: ' + safeResponse.cleanDomString(difficulty.data("difficulty")) + ' ">' + safeResponse.cleanDomString(difficulty.find(".subtext")[0].innerText) + '</a></span>');
             }
-            
-            $("#difficultyIndex").click(function(){
-              window.open("http://dictionary.com/browse/"+word,'_blank');
+
+            $("#difficultyIndex").click(function () {
+              window.open("http://dictionary.com/browse/" + word, '_blank');
             });
           }
         });
       }
     });
   };
-  
+
   this.__urban = function (word) {
     $.ajax({
       url: 'http://www.urbandictionary.com/define.php?term=' + word,
@@ -112,65 +125,64 @@ search = function () {
       },
       success: function (data) {
         if ($(data).find('.no-results').length > 0) {
-            $('#content').html('<p>Aradığınız <strong>kelimenin anlamını Urban Dictionary\'de arşivinde bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir ya da <a target="_blank" href="https://www.google.com/search?q=' + word + '">Google <i class="fi-eject"></i></a> </p>');
+          $('#content').html('<p>Aradığınız <strong>kelimenin anlamını Urban Dictionary\'de arşivinde bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir ya da <a target="_blank" href="https://www.google.com/search?q=' + word + '">Google <i class="fi-eject"></i></a> </p>');
         }
         else {
-            var meanings = $(data).find(".meaning");
-            var examples = $(data).find(".example");
-            
-            for (var i = 0; i < meanings.length; i++) {
-                $('#content')
-                    .append("<strong>" + safeResponse.cleanDomString(meanings[i].outerHTML) + "</strong>")
-                    .append("<em>" + safeResponse.cleanDomString(examples[i].outerHTML) + "</em>")
-                    .append("<hr>");
-            }
+          var meanings = $(data).find(".meaning");
+          var examples = $(data).find(".example");
+
+          for (var i = 0; i < meanings.length; i++) {
+            $('#content')
+                .append("<strong>" + safeResponse.cleanDomString(meanings[i].outerHTML) + "</strong>")
+                .append("<em>" + safeResponse.cleanDomString(examples[i].outerHTML) + "</em>")
+                .append("<hr>");
+          }
         }
 
         $('#content').find('.meaning a').on('click', function (e) {
-            e.preventDefault();
-            search.urban($(this).text());
+          e.preventDefault();
+          search.urban($(this).text());
         });
       }
     });
   };
 
   this.__wordnik = function (word) {
-		$.ajax({
-			url: 'http://api.wordnik.com:80/v4/word.json/' + word + '/definitions?limit=10&includeRelated=true&sourceDictionaries=wiktionary&useCanonical=true&includeTags=false&api_key=7e21be24f37babb012408010cec0c5a212312f653348938f5',
-			type: 'GET',
-			complete: function () {
-				$('.pleaseWait').addClass('hide');
+    $.ajax({
+      url: 'http://api.wordnik.com:80/v4/word.json/' + word + '/definitions?limit=10&includeRelated=true&sourceDictionaries=wiktionary&useCanonical=true&includeTags=false&api_key=7e21be24f37babb012408010cec0c5a212312f653348938f5',
+      type: 'GET',
+      complete: function () {
+        $('.pleaseWait').addClass('hide');
         $('#enToEn').removeClass('secondary').addClass('success');
         $('#enToTR').removeClass('success').addClass('secondary');
-			},
-			success: function (data) {
-				if (data.length > 0) {
-					var i = Math.floor(Math.random() * (data.length - 1));
-					var sourceDict = data[i].sourceDictionary != undefined ? data[i].sourceDictionary : '';
-					$('#content').prepend('<p title="'+ safeResponse.cleanDomString(data[i].sourceDictionary) +'">' + safeResponse.cleanDomString(data[i].text) + '</p>')
-				}
-				else
-					{
-						$('#content').html('<p>Aradığınız <strong>kelimenin anlamını Wordnik arşivinde bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir ya da <a target="_blank" href="https://www.google.com/search?q=' + word + '">Google <i class="fi-eject"></i></a> </p>');
-					}
-			}
-		});
+      },
+      success: function (data) {
+        if (data.length > 0) {
+          var i = Math.floor(Math.random() * (data.length - 1));
+          var sourceDict = data[i].sourceDictionary != undefined ? data[i].sourceDictionary : '';
+          $('#content').prepend('<p title="' + safeResponse.cleanDomString(data[i].sourceDictionary) + '">' + safeResponse.cleanDomString(data[i].text) + '</p>')
+        }
+        else {
+          $('#content').html('<p>Aradığınız <strong>kelimenin anlamını Wordnik arşivinde bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir ya da <a target="_blank" href="https://www.google.com/search?q=' + word + '">Google <i class="fi-eject"></i></a> </p>');
+        }
+      }
+    });
 
-		$.ajax({
-			url: 'http://api.wordnik.com:80/v4/word.json/' + word + '/relatedWords?useCanonical=true&relationshipTypes=synonym&limitPerRelationshipType=10&api_key=7e21be24f37babb012408010cec0c5a212312f653348938f5',
-			type: 'GET',
-			complete: function () {
-				$('.pleaseWait').addClass('hide');
-			},
-			success: function (data) {
-				if (data.length > 0) {
-					if (data.length > 0) {
-						$('#content').append('<p><span class="info label">' + safeResponse.cleanDomString(data[0].relationshipType) + '</span> ' + safeResponse.cleanDomString(data[0].words.join(', ')) +'</p>');
-					}
-				}
-			}
-		});
-    
+    $.ajax({
+      url: 'http://api.wordnik.com:80/v4/word.json/' + word + '/relatedWords?useCanonical=true&relationshipTypes=synonym&limitPerRelationshipType=10&api_key=7e21be24f37babb012408010cec0c5a212312f653348938f5',
+      type: 'GET',
+      complete: function () {
+        $('.pleaseWait').addClass('hide');
+      },
+      success: function (data) {
+        if (data.length > 0) {
+          if (data.length > 0) {
+            $('#content').append('<p><span class="info label">' + safeResponse.cleanDomString(data[0].relationshipType) + '</span> ' + safeResponse.cleanDomString(data[0].words.join(', ')) + '</p>');
+          }
+        }
+      }
+    });
+
     $.ajax({
       url: 'http://api.wordnik.com:80/v4/word.json/' + word + '/examples?includeDuplicates=false&useCanonical=true&skip=0&limit=5&api_key=7e21be24f37babb012408010cec0c5a212312f653348938f5',
       type: 'GET',
@@ -178,39 +190,39 @@ search = function () {
         if (data.examples && data.examples.length > 0) {
           var max = data.examples.length - 1;
           var i = Math.floor(Math.random() * (max + 1));
-  
+
           var re = new RegExp(data.examples[i].word, "gi");
-  
-          $('#content').append('<p title="'+ safeResponse.cleanDomString(data.examples[i].title) +'"><span class="info label">example</span> ' + safeResponse.cleanDomString(data.examples[i].text.replace(re, "<strong>$&</strong>")) + '</p>');
+
+          $('#content').append('<p title="' + safeResponse.cleanDomString(data.examples[i].title) + '"><span class="info label">example</span> ' + safeResponse.cleanDomString(data.examples[i].text.replace(re, "<strong>$&</strong>")) + '</p>');
         }
       }
     });
-    
+
     parent.__wordnikAudio(word);
-    
+
   };
 
   this.__wordnikAudio = function (word) {
     $.ajax({
-			url: 'http://api.wordnik.com:80/v4/word.json/' + word + '/audio?useCanonical=true&limit=50&api_key=7e21be24f37babb012408010cec0c5a212312f653348938f5',
-			type: 'GET',
-			success: function (data) {
+      url: 'http://api.wordnik.com:80/v4/word.json/' + word + '/audio?useCanonical=true&limit=50&api_key=7e21be24f37babb012408010cec0c5a212312f653348938f5',
+      type: 'GET',
+      success: function (data) {
 
-				if (data.length > 0) {
-					for (var i = 0; i < data.length; i++) {
-						$('.audio').append('<span class="fi-volume" data-url="' + safeResponse.cleanDomString(data[i].fileUrl) + '" aria-hidden="true" title="Kelimenin telaffuzunu dinlemek için tıklayın"></span> ');
+        if (data.length > 0) {
+          for (var i = 0; i < data.length; i++) {
+            $('.audio').append('<span class="fi-volume" data-url="' + safeResponse.cleanDomString(data[i].fileUrl) + '" aria-hidden="true" title="Kelimenin telaffuzunu dinlemek için tıklayın"></span> ');
 
-						$('.audio span[class=fi-volume]')
-              .on('click', function() {
-                new Audio($(this).attr('data-url')).play();
-                $(this).css('color', 'blue');
-              });
-					} 
-				}
-			}
-		});
+            $('.audio span[class=fi-volume]')
+                .on('click', function () {
+                  new Audio($(this).attr('data-url')).play();
+                  $(this).css('color', 'blue');
+                });
+          }
+        }
+      }
+    });
   };
-  
+
   this.__tdk = function (word) {
     $.ajax({
       url: 'http://www.tdk.gov.tr/index.php?option=com_gts&arama=gts&kelime=' + encodeURIComponent(word),
@@ -219,23 +231,24 @@ search = function () {
         $('.pleaseWait').addClass('hide');
       },
       success: function (data) {
-        if ($(data).find('table[id=hor-minimalist-a]').length < 1 && $(data).find('table[id=hor-minimalist-c]').length < 1)
-        { // suggestion ya da kelimenin anlamı bulunamadıysa
+        if ($(data).find('table[id=hor-minimalist-a]').length < 1 && $(data).find('table[id=hor-minimalist-c]').length < 1) { // suggestion ya da kelimenin anlamı bulunamadıysa
           $('#content').html('<p>Aradığınız <strong>kelimeyi TDK sözlüğünde bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir ya da <a target="_blank" href="https://www.google.com/search?q=' + word + '">Google <i class="fi-eject"></i></a></p>');
         }
-        else
-        {
-          if ($(data).find('table[id=hor-minimalist-c]').length > 0)
-          {
+        else {
+          if ($(data).find('table[id=hor-minimalist-c]').length > 0) {
             $('#content')
                 .append(safeResponse.cleanDomString($(data).find('table[id=hor-minimalist-c]').html()))
                 .append('<hr>');
-            $("table[id=hor-minimalist-c]").each(function(){ $(this).removeAttr('width')});
+            $("table[id=hor-minimalist-c]").each(function () {
+              $(this).removeAttr('width')
+            });
           }
           for (var i = 0; i < $(data).find('table[id=hor-minimalist-a]').length; i++) {
             $('#content').append(safeResponse.cleanDomString($(data).find('table[id=hor-minimalist-a]')[i].outerHTML));
           }
-          $("table[id=hor-minimalist-a]").each(function(){ $(this).removeAttr('width')});
+          $("table[id=hor-minimalist-a]").each(function () {
+            $(this).removeAttr('width')
+          });
         }
 
         $('#content').find('a[target!="_blank"]')
@@ -256,7 +269,7 @@ search = function () {
     } else {
       xhr.open("GET", 'https://eksisozluk.com/?q=' + encodeURIComponent(word), true); // pagination icin ?q='dan feragat.
     }
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
       $('.pleaseWait').addClass('hide');
 
       if (xhr.statusCode == 404) {
@@ -272,7 +285,7 @@ search = function () {
         if ($(data).find('#entry-list li').length < 1) {
           $('#content').html('<p>Aradığınız <strong>kelimeyi Ekşi Sözlük\'te bulamadık!</strong> :( <br> Aşağıdaki de aradığınız değilse, kelimedeki ekleri silmek belki yardımcı olabilir ya da <a target="_blank" href="https://www.google.com/search?q=' + word + '">Google <i class="fi-eject"></i></a> </p>');
           if ($(data).find('a.suggested-title')) {
-              $('#content').append(safeResponse.cleanDomString($(data).find('a.suggested-title').parent().html()));
+            $('#content').append(safeResponse.cleanDomString($(data).find('a.suggested-title').parent().html()));
           }
         }
         else {
@@ -281,7 +294,7 @@ search = function () {
             $('#content').append($(entry).find('.content'));
             var auth_info = '<div class="text-right">';
             auth_info += '<p class="auth_info">' + safeResponse.cleanDomString($(entry).find('.info .entry-author')[0].outerHTML);
-            auth_info += '  ' + safeResponse.cleanDomString($(entry).find('.info .entry-date')[0].outerHTML)+'</p>';
+            auth_info += '  ' + safeResponse.cleanDomString($(entry).find('.info .entry-date')[0].outerHTML) + '</p>';
             auth_info += '</div>';
             $('#content').append(auth_info);
             $('#content').append('<hr>');
@@ -293,12 +306,10 @@ search = function () {
             var currPage = $(data).find('.pager')[0].getAttribute('data-currentpage');
 
             for (i = 1; i <= $(data).find('.pager')[0].getAttribute('data-pagecount'); i++) {
-              if (i == currPage)
-              {
+              if (i == currPage) {
                 $('#content .pager').append('<option value="' + responseURL + '?p=' + i + '" selected>' + i + '</option>');
               }
-              else
-              {
+              else {
                 $('#content .pager').append('<option value="' + responseURL + '?p=' + i + '">' + i + '</option>');
               }
             }
@@ -314,40 +325,40 @@ search = function () {
             e.preventDefault();
             window.open('https://eksisozluk.com' + $(this).attr('href'))
           });
-          
+
           $('.content a[class=url]').on('click', function (e) {
             e.preventDefault();
             window.open($(this).attr('href'))
           });
         }
         $('.content a[class=b], a.suggested-title').on('click', function (e) {
-            e.preventDefault();
-            document.getElementById('search').value = $(this).text();
-            search.eksi($(this).text());
-          });
+          e.preventDefault();
+          document.getElementById('search').value = $(this).text();
+          search.eksi($(this).text());
+        });
       }
     };
     xhr.send();
   };
-  
-    this.__wikipedia = function (word, language) {
-        $.ajax({
-            url: 'https://' + language + '.wikipedia.org/w/api.php?action=opensearch&search=' + word + '&format=json',
-            type: 'GET',
-            complete: function () {
-                $('.pleaseWait').addClass('hide');
-            },
-            success: function (data) {
-                if (data[1].length>0) {
-                $('#content').html("<ol></ol>");
-                for (cnt = 0; cnt < data[1].length; cnt++) {
-                    $("#content ol").append("<li><strong>"+safeResponse.cleanDomString(data[1][cnt]) + "</strong>: " + safeResponse.cleanDomString(data[2][cnt]) + ' <a title="yeni sekmede aç" target="_blank" href="' + safeResponse.cleanDomString(data[3][cnt]) + '"><i class="fi-eject"></i></a>' + "</li>");
-                }
-                } else {
-                $('#content').html('<p>Aradığınız <strong>kelimenin anlamını Wikipedia\'da bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir ya da <a target="_blank" href="https://www.google.com/search?q=' + word + '">Google <i class="fi-eject"></i></a> </p>');
-                }
-            }
-        });
+
+  this.__wikipedia = function (word, language) {
+    $.ajax({
+      url: 'https://' + language + '.wikipedia.org/w/api.php?action=opensearch&search=' + word + '&format=json',
+      type: 'GET',
+      complete: function () {
+        $('.pleaseWait').addClass('hide');
+      },
+      success: function (data) {
+        if (data[1].length > 0) {
+          $('#content').html("<ol></ol>");
+          for (cnt = 0; cnt < data[1].length; cnt++) {
+            $("#content ol").append("<li><strong>" + safeResponse.cleanDomString(data[1][cnt]) + "</strong>: " + safeResponse.cleanDomString(data[2][cnt]) + ' <a title="yeni sekmede aç" target="_blank" href="' + safeResponse.cleanDomString(data[3][cnt]) + '"><i class="fi-eject"></i></a>' + "</li>");
+          }
+        } else {
+          $('#content').html('<p>Aradığınız <strong>kelimenin anlamını Wikipedia\'da bulamadık!</strong> :( <br> Kelimedeki ekleri silmek belki yardımcı olabilir ya da <a target="_blank" href="https://www.google.com/search?q=' + word + '">Google <i class="fi-eject"></i></a> </p>');
+        }
+      }
+    });
   };
 
   return {
@@ -385,19 +396,19 @@ if (document.location.hash) {
     case "eksi":
       search.eksi(document.location.hash.substr(1).split("//")[0]);
       break;
-      
+
     case "tdk":
       search.tdk(document.location.hash.substr(1).split("//")[0]);
       break;
-      
+
     case "wiki":
       search.wikipedia(document.location.hash.substr(1).split("//")[0]);
       break;
-      
+
     case "viki":
       search.vikipedi(document.location.hash.substr(1).split("//")[0]);
       break;
-      
+
     case "urban":
       search.urban(document.location.hash.substr(1).split("//")[0]);
       break;
@@ -406,7 +417,7 @@ if (document.location.hash) {
       search.tureng(document.location.hash.substr(1).split("//")[0]);
       break;
   }
-  
+
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -421,7 +432,7 @@ document.addEventListener("DOMContentLoaded", function () {
   $('button#eksi').on('click', function () {
     search.eksi();
   });
-  
+
   $('#wikipedia').on('click', function () {
     search.wikipedia();
   });
@@ -433,7 +444,7 @@ document.addEventListener("DOMContentLoaded", function () {
   $('#urbandict').on('click', function () {
     search.urban();
   });
-  
+
   $('#enToEn').on('click', function () {
     search.wordnik();
   });
